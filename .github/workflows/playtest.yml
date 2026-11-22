@@ -1,0 +1,131 @@
+name: Rattlehelm playtest
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    outputs:
+      build_sha: ${{ steps.stamp.outputs.sha }}
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        with:
+          node-version: '22.19.0'
+      - name: Install Godot Standard and matching templates
+        run: |
+          ci/install_godot.sh "$RUNNER_TEMP/rattlehelm-tools"
+          echo "$RUNNER_TEMP/rattlehelm-tools" >> "$GITHUB_PATH"
+      - name: Stamp the build
+        id: stamp
+        run: |
+          short_sha="${GITHUB_SHA:0:8}"
+          printf 'class_name BuildVersion\nextends RefCounted\n\nconst SHA := "%s"\n' "$short_sha" > game/build_version.gd
+          printf 'sha=%s\n' "$short_sha" >> "$GITHUB_OUTPUT"
+      - name: Import, launch and test
+        run: |
+          mkdir -p build/logs build/web
+          godot --headless --path . --import 2>&1 | tee build/logs/import.log
+          godot --headless --path . --quit-after 120 2>&1 | tee build/logs/launch.log
+          for fps in 30 60 120; do
+            godot --headless --path . --fixed-fps "$fps" --script res://tests/run_tests.gd 2>&1 | tee "build/logs/tests-$fps.log"
+          done
+          if grep -E '(^ERROR:|SCRIPT ERROR:)' build/logs/*.log; then exit 1; fi
+      - name: Export Web
+        run: |
+          godot --headless --path . --export-release 'Web Playtest' build/web/index.html 2>&1 | tee build/logs/export-web.log
+          if grep -E '(^ERROR:|SCRIPT ERROR:)' build/logs/export-web.log; then exit 1; fi
+          cp ui/fonts/*-LICENSE.txt build/web/
+      - name: Start HTTP server and test in Chromium
+        env:
+          BUILD_SHA: ${{ steps.stamp.outputs.sha }}
+        run: |
+          npm ci --prefix ci
+          ci/node_modules/.bin/playwright install --with-deps chromium
+          mkdir -p "$RUNNER_TEMP/rattlehelm-site"
+          ln -s "$PWD/build/web" "$RUNNER_TEMP/rattlehelm-site/Rattlehelm"
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory "$RUNNER_TEMP/rattlehelm-site" > build/logs/http.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid"' EXIT
+          curl --silent --show-error --fail --retry 10 --retry-connrefused --retry-delay 1 http://127.0.0.1:8765/Rattlehelm/index.html > /dev/null
+          node ci/browser_smoke.mjs http://127.0.0.1:8765/Rattlehelm/ "$BUILD_SHA" build/logs/browser
+      - name: Save the Pages artifact
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && vars.ENABLE_GITHUB_PAGES == 'true'
+        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4.0.0
+        with:
+          path: build/web
+      - name: Save diagnostic logs
+        if: always()
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        with:
+          name: playtest-logs
+          path: build/logs
+          if-no-files-found: ignore
+
+  pages:
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && vars.ENABLE_GITHUB_PAGES == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    concurrency:
+      group: rattlehelm-pages
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - name: Verify that this build is still the main tip
+        id: tip
+        run: |
+          tip="$(git ls-remote --exit-code origin refs/heads/main | cut -f1)"
+          if [[ "$tip" == "$GITHUB_SHA" ]]; then
+            echo "current=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Pages publication skipped because main advanced to $tip." >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5.0.0
+        if: steps.tip.outputs.current == 'true'
+      - uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5
+        if: steps.tip.outputs.current == 'true'
+        id: deployment
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        if: steps.tip.outputs.current == 'true'
+        with:
+          node-version: '22.19.0'
+      - name: Verify the HTTPS deployment
+        if: steps.tip.outputs.current == 'true'
+        env:
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+          BUILD_SHA: ${{ needs.build.outputs.build_sha }}
+        run: |
+          [[ "$PAGE_URL" == https://* ]]
+          npm ci --prefix ci
+          ci/node_modules/.bin/playwright install --with-deps chromium
+          node ci/browser_smoke.mjs "$PAGE_URL" "$BUILD_SHA" build/live-smoke
+          printf '[Play in browser](%s)\n\nVerified build `%s`.\n\n[Workflow run](%s/%s/actions/runs/%s)\n' \
+            "$PAGE_URL" "$BUILD_SHA" "$GITHUB_SERVER_URL" "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID" >> "$GITHUB_STEP_SUMMARY"
+      - name: Save deployment diagnostics
+        if: always() && steps.tip.outputs.current == 'true'
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        with:
+          name: live-playtest-logs
+          path: build/live-smoke
+          if-no-files-found: ignore

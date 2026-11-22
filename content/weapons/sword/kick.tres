@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="AttackDef" format=3]
+
+[ext_resource type="Script" path="res://actors/combat/attack_def.gd" id="1"]
+[ext_resource type="AudioStream" path="res://content/audio/club_swing.wav" id="2"]
+
+[resource]
+script = ExtResource("1")
+swing_audio = ExtResource("2")
+id = &"kick"
+clip = &"kick"
+contact_on_weapon = false
+startup = 4
+active = 3
+recovery = 12
+damage = 5
+reach = 31.0
+half_depth = 13.0
+knockback = 315.0
+stun_ticks = 23
+height_band = Vector2(15, 50)
+hitstop = 2
+swing_tick = 2

@@ -1,0 +1,6 @@
+* text=auto eol=lf
+*.svg text
+*.tres text
+*.tscn text
+*.wav binary
+*.ttf binary

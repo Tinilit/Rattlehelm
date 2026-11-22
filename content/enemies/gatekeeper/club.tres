@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="WeaponDef" format=3]
+
+[ext_resource type="Script" path="res://content/weapons/weapon_def.gd" id="1"]
+[ext_resource type="Texture2D" path="res://content/enemies/gatekeeper/club.svg" id="2"]
+[ext_resource type="PackedScene" path="res://content/enemies/gatekeeper/club_held.tscn" id="3"]
+[ext_resource type="Resource" path="res://content/enemies/gatekeeper/club_sweep.tres" id="4"]
+
+[resource]
+script = ExtResource("1")
+id = &"club"
+label_key = &"WEAPON_CLUB"
+player_equippable = false
+icon = ExtResource("2")
+held_scene = ExtResource("3")
+opener = ExtResource("4")

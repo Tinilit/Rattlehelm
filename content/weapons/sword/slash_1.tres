@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="AttackDef" format=3]
+
+[ext_resource type="Script" path="res://actors/combat/attack_def.gd" id="1"]
+[ext_resource type="AudioStream" path="res://content/audio/sword_swing.wav" id="2"]
+[ext_resource type="Resource" path="res://content/weapons/sword/slash_2.tres" id="3"]
+
+[resource]
+script = ExtResource("1")
+swing_audio = ExtResource("2")
+id = &"slash_1"
+clip = &"slash_1"
+startup = 5
+active = 4
+recovery = 11
+damage = 12
+reach = 62.0
+knockback = 94.0
+stun_ticks = 15
+combo_input_tick = 8
+chain_tick = 13
+swing_tick = 3
+follow_up = ExtResource("3")

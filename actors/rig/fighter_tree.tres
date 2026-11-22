@@ -1,0 +1,83 @@
+[gd_resource type="AnimationNodeStateMachine" format=3]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="locomotion"]
+xfade_time = 0.066667
+advance_mode = 1
+
+[sub_resource type="AnimationNodeAnimation" id="idle"]
+animation = &"idle"
+
+[sub_resource type="AnimationNodeAnimation" id="stride"]
+animation = &"stride"
+
+[sub_resource type="AnimationNodeAnimation" id="takeoff"]
+animation = &"takeoff"
+
+[sub_resource type="AnimationNodeAnimation" id="airborne"]
+animation = &"airborne"
+
+[sub_resource type="AnimationNodeAnimation" id="land"]
+animation = &"land"
+
+[sub_resource type="AnimationNodeAnimation" id="roll"]
+animation = &"roll"
+
+[sub_resource type="AnimationNodeAnimation" id="stagger"]
+animation = &"stagger"
+
+[sub_resource type="AnimationNodeAnimation" id="fall"]
+animation = &"fall"
+
+[sub_resource type="AnimationNodeAnimation" id="flask"]
+animation = &"flask"
+
+[sub_resource type="AnimationNodeAnimation" id="kick"]
+animation = &"kick"
+
+[sub_resource type="AnimationNodeAnimation" id="air_slash"]
+animation = &"air_slash"
+
+[sub_resource type="AnimationNodeAnimation" id="slash_1"]
+animation = &"slash_1"
+
+[sub_resource type="AnimationNodeAnimation" id="slash_2"]
+animation = &"slash_2"
+
+[sub_resource type="AnimationNodeAnimation" id="slash_3"]
+animation = &"slash_3"
+
+[sub_resource type="AnimationNodeAnimation" id="club_sweep"]
+animation = &"club_sweep"
+
+[resource]
+states/idle/node = SubResource("idle")
+states/idle/position = Vector2(110, 90)
+states/stride/node = SubResource("stride")
+states/stride/position = Vector2(260, 90)
+states/takeoff/node = SubResource("takeoff")
+states/takeoff/position = Vector2(410, 90)
+states/airborne/node = SubResource("airborne")
+states/airborne/position = Vector2(560, 90)
+states/land/node = SubResource("land")
+states/land/position = Vector2(710, 90)
+states/roll/node = SubResource("roll")
+states/roll/position = Vector2(110, 200)
+states/stagger/node = SubResource("stagger")
+states/stagger/position = Vector2(260, 200)
+states/fall/node = SubResource("fall")
+states/fall/position = Vector2(410, 200)
+states/flask/node = SubResource("flask")
+states/flask/position = Vector2(560, 200)
+states/kick/node = SubResource("kick")
+states/kick/position = Vector2(710, 200)
+states/air_slash/node = SubResource("air_slash")
+states/air_slash/position = Vector2(110, 310)
+states/slash_1/node = SubResource("slash_1")
+states/slash_1/position = Vector2(260, 310)
+states/slash_2/node = SubResource("slash_2")
+states/slash_2/position = Vector2(410, 310)
+states/slash_3/node = SubResource("slash_3")
+states/slash_3/position = Vector2(560, 310)
+states/club_sweep/node = SubResource("club_sweep")
+states/club_sweep/position = Vector2(710, 310)
+transitions = ["idle", "stride", SubResource("locomotion"), "stride", "idle", SubResource("locomotion")]

@@ -1,0 +1,58 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://content/rooms/watch_gate/WatchGate.tscn" id="1"]
+[ext_resource type="Script" path="res://content/rooms/training/practice_target.gd" id="2"]
+[ext_resource type="Texture2D" path="res://content/rooms/training/straw.svg" id="3"]
+[ext_resource type="Texture2D" path="res://content/rooms/training/iron.svg" id="4"]
+[ext_resource type="Texture2D" path="res://actors/rig/foot_shadow.svg" id="5"]
+
+[sub_resource type="RectangleShape2D" id="stand"]
+size = Vector2(37, 20)
+
+[node name="TrainingYard" instance=ExtResource("1")]
+training_yard = true
+
+[node name="Straw" type="CharacterBody2D" parent="Actors" index="0"]
+position = Vector2(520, 580)
+motion_mode = 1
+collision_layer = 2
+collision_mask = 3
+script = ExtResource("2")
+hurt_width = 18.0
+hurt_floor = 23.0
+hurt_ceiling = 133.0
+
+[node name="Body" type="CollisionShape2D" parent="Actors/Straw"]
+shape = SubResource("stand")
+
+[node name="Shadow" type="Sprite2D" parent="Actors/Straw"]
+texture = ExtResource("5")
+scale = Vector2(0.8, 0.85)
+
+[node name="Artwork" type="Sprite2D" parent="Actors/Straw"]
+texture = ExtResource("3")
+centered = false
+offset = Vector2(-87, -146)
+
+[node name="Iron" type="CharacterBody2D" parent="Actors" index="1"]
+position = Vector2(772, 502)
+motion_mode = 1
+collision_layer = 2
+collision_mask = 3
+script = ExtResource("2")
+surface_material = 2
+hurt_width = 20.0
+hurt_floor = 27.0
+hurt_ceiling = 120.0
+
+[node name="Body" type="CollisionShape2D" parent="Actors/Iron"]
+shape = SubResource("stand")
+
+[node name="Shadow" type="Sprite2D" parent="Actors/Iron"]
+texture = ExtResource("5")
+scale = Vector2(0.72, 0.7)
+
+[node name="Artwork" type="Sprite2D" parent="Actors/Iron"]
+texture = ExtResource("4")
+centered = false
+offset = Vector2(-58, -164)

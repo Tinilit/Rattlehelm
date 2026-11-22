@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EnemyDef" format=3]
+
+[ext_resource type="Script" path="res://content/enemies/enemy_def.gd" id="1"]
+[ext_resource type="PackedScene" path="res://content/enemies/gatekeeper/Gatekeeper.tscn" id="2"]
+[ext_resource type="Resource" path="res://content/enemies/gatekeeper/club.tres" id="3"]
+
+[resource]
+script = ExtResource("1")
+id = &"gatekeeper"
+label_key = &"ENEMY_GATEKEEPER"
+actor_scene = ExtResource("2")
+weapon = ExtResource("3")
+health = 44
+preferred_reach = 61.0
+engagement_delay = 20

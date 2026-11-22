@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="RoomDef" format=3]
+
+[ext_resource type="Script" path="res://content/rooms/room_def.gd" id="1"]
+[ext_resource type="PackedScene" path="res://content/rooms/watch_gate/WatchGate.tscn" id="2"]
+[ext_resource type="Resource" path="res://content/rooms/watch_gate/gate_watch.tres" id="3"]
+
+[resource]
+script = ExtResource("1")
+id = &"watch_gate"
+label_key = &"GATE_NAME"
+room_scene = ExtResource("2")
+encounter = ExtResource("3")

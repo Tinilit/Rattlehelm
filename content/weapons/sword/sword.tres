@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="WeaponDef" format=3]
+
+[ext_resource type="Script" path="res://content/weapons/weapon_def.gd" id="1"]
+[ext_resource type="Texture2D" path="res://content/weapons/sword/sword.svg" id="2"]
+[ext_resource type="PackedScene" path="res://content/weapons/sword/sword_held.tscn" id="3"]
+[ext_resource type="Resource" path="res://content/weapons/sword/slash_1.tres" id="4"]
+[ext_resource type="Resource" path="res://content/weapons/sword/kick.tres" id="5"]
+[ext_resource type="Resource" path="res://content/weapons/sword/air_slash.tres" id="6"]
+
+[resource]
+script = ExtResource("1")
+id = &"sword"
+label_key = &"WEAPON_SWORD"
+icon = ExtResource("2")
+held_scene = ExtResource("3")
+opener = ExtResource("4")
+kick = ExtResource("5")
+aerial = ExtResource("6")

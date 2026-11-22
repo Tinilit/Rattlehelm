@@ -1,0 +1,16 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://content/weapons/sword/sword.svg" id="1"]
+
+[node name="Sword" type="Node2D"]
+
+[node name="Grip" type="Marker2D" parent="."]
+
+[node name="Tip" type="Marker2D" parent="."]
+position = Vector2(67, -1)
+
+[node name="Artwork" type="Sprite2D" parent="."]
+texture = ExtResource("1")
+centered = false
+scale = Vector2(0.3333333, 0.3333333)
+offset = Vector2(-60, -54)
