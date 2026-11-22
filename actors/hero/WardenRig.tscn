@@ -4,17 +4,60 @@
 [ext_resource type="AnimationLibrary" path="res://actors/rig/fighter_clips.tres" id="2"]
 [ext_resource type="AnimationNodeStateMachine" path="res://actors/rig/fighter_tree.tres" id="3"]
 [ext_resource type="Texture2D" path="res://ui/flask.svg" id="flask"]
-[ext_resource type="Texture2D" path="res://actors/hero/foot.svg" id="foot"]
-[ext_resource type="Texture2D" path="res://actors/hero/forearm.svg" id="forearm"]
-[ext_resource type="Texture2D" path="res://actors/hero/hand.svg" id="hand"]
-[ext_resource type="Texture2D" path="res://actors/hero/head.svg" id="head"]
-[ext_resource type="Texture2D" path="res://actors/hero/shin.svg" id="shin"]
-[ext_resource type="Texture2D" path="res://actors/hero/shoulder.svg" id="shoulder"]
-[ext_resource type="Texture2D" path="res://actors/hero/thigh.svg" id="thigh"]
-[ext_resource type="Texture2D" path="res://actors/hero/torso.svg" id="torso"]
-[ext_resource type="Texture2D" path="res://actors/hero/waist.svg" id="waist"]
+[ext_resource type="Texture2D" path="res://actors/hero/watchman_atlas.png" id="paint"]
+
+[sub_resource type="AtlasTexture" id="head"]
+atlas = ExtResource("paint")
+region = Rect2(26, 20, 323, 313)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="torso"]
+atlas = ExtResource("paint")
+region = Rect2(425, 45, 243, 286)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="waist"]
+atlas = ExtResource("paint")
+region = Rect2(769, 93, 260, 218)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="shoulder"]
+atlas = ExtResource("paint")
+region = Rect2(1181, 47, 144, 273)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="forearm"]
+atlas = ExtResource("paint")
+region = Rect2(127, 417, 102, 258)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hand"]
+atlas = ExtResource("paint")
+region = Rect2(452, 470, 179, 155)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="offhand"]
+atlas = ExtResource("paint")
+region = Rect2(824, 823, 168, 152)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="thigh"]
+atlas = ExtResource("paint")
+region = Rect2(815, 403, 172, 276)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="shin"]
+atlas = ExtResource("paint")
+region = Rect2(1183, 405, 139, 239)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="foot"]
+atlas = ExtResource("paint")
+region = Rect2(89, 807, 212, 187)
+filter_clip = true
 
 [node name="WardenRig" type="Node2D"]
+texture_filter = 4
 script = ExtResource("1")
 
 [node name="Facing" type="Node2D" parent="."]
@@ -30,23 +73,25 @@ bone_angle = -1.5707963
 
 [node name="FarThigh" type="Bone2D" parent="Facing/Skeleton/Hip"]
 show_behind_parent = true
-position = Vector2(11, 3)
-rest = Transform2D(1, 0, 0, 1, 11, 3)
+position = Vector2(12, 3)
+rest = Transform2D(1, 0, 0, 1, 12, 3)
 auto_calculate_length_and_angle = false
 length = 32.0
 bone_angle = 1.5707963
 
 [node name="Art" type="Sprite2D" parent="Facing/Skeleton/Hip/FarThigh"]
-texture = ExtResource("thigh")
+rotation = -0.125
+texture = SubResource("thigh")
 centered = false
-scale = Vector2(0.3333333, 0.3333333)
-offset = Vector2(-51, -30)
-modulate = Color(0.76, 0.70, 0.71, 1)
+position = Vector2(-15.2, -9.3)
+scale = Vector2(0.157, 0.173)
+modulate = Color(0.81, 0.77, 0.80, 1)
 
 [node name="FarLegGear" type="Marker2D" parent="Facing/Skeleton/Hip/FarThigh"]
 unique_name_in_owner = true
 
 [node name="FarShin" type="Bone2D" parent="Facing/Skeleton/Hip/FarThigh"]
+show_behind_parent = true
 position = Vector2(0, 32)
 rest = Transform2D(1, 0, 0, 1, 0, 32)
 auto_calculate_length_and_angle = false
@@ -54,16 +99,18 @@ length = 28.0
 bone_angle = 1.5707963
 
 [node name="Art" type="Sprite2D" parent="Facing/Skeleton/Hip/FarThigh/FarShin"]
-texture = ExtResource("shin")
+rotation = -0.018
+texture = SubResource("shin")
 centered = false
-scale = Vector2(0.3333333, 0.3333333)
-offset = Vector2(-42, -27)
-modulate = Color(0.76, 0.70, 0.71, 1)
+position = Vector2(-10, -4.5)
+scale = Vector2(0.137, 0.134)
+modulate = Color(0.81, 0.77, 0.80, 1)
 
 [node name="FarShinGear" type="Marker2D" parent="Facing/Skeleton/Hip/FarThigh/FarShin"]
 unique_name_in_owner = true
 
 [node name="FarFoot" type="Bone2D" parent="Facing/Skeleton/Hip/FarThigh/FarShin"]
+show_behind_parent = true
 position = Vector2(0, 28)
 rest = Transform2D(1, 0, 0, 1, 0, 28)
 auto_calculate_length_and_angle = false
@@ -71,32 +118,34 @@ length = 16.0
 bone_angle = 0.0
 
 [node name="Art" type="Sprite2D" parent="Facing/Skeleton/Hip/FarThigh/FarShin/FarFoot"]
-texture = ExtResource("foot")
+texture = SubResource("foot")
 centered = false
-scale = Vector2(0.3333333, 0.3333333)
-offset = Vector2(-42, -27)
-modulate = Color(0.76, 0.70, 0.71, 1)
+position = Vector2(-8.3, -9.6)
+scale = Vector2(0.127, 0.106)
+modulate = Color(0.81, 0.77, 0.80, 1)
 
 [node name="FarFootGear" type="Marker2D" parent="Facing/Skeleton/Hip/FarThigh/FarShin/FarFoot"]
 unique_name_in_owner = true
 
 [node name="NearThigh" type="Bone2D" parent="Facing/Skeleton/Hip"]
-position = Vector2(-11, 3)
-rest = Transform2D(1, 0, 0, 1, -11, 3)
+position = Vector2(-12, 3)
+rest = Transform2D(1, 0, 0, 1, -12, 3)
 auto_calculate_length_and_angle = false
 length = 32.0
 bone_angle = 1.5707963
 
 [node name="Art" type="Sprite2D" parent="Facing/Skeleton/Hip/NearThigh"]
-texture = ExtResource("thigh")
+rotation = -0.125
+texture = SubResource("thigh")
 centered = false
-scale = Vector2(0.3333333, 0.3333333)
-offset = Vector2(-51, -30)
+position = Vector2(-15.2, -9.3)
+scale = Vector2(0.157, 0.173)
 
 [node name="NearLegGear" type="Marker2D" parent="Facing/Skeleton/Hip/NearThigh"]
 unique_name_in_owner = true
 
 [node name="NearShin" type="Bone2D" parent="Facing/Skeleton/Hip/NearThigh"]
+show_behind_parent = true
 position = Vector2(0, 32)
 rest = Transform2D(1, 0, 0, 1, 0, 32)
 auto_calculate_length_and_angle = false
@@ -104,15 +153,17 @@ length = 28.0
 bone_angle = 1.5707963
 
 [node name="Art" type="Sprite2D" parent="Facing/Skeleton/Hip/NearThigh/NearShin"]
-texture = ExtResource("shin")
+rotation = -0.018
+texture = SubResource("shin")
 centered = false
-scale = Vector2(0.3333333, 0.3333333)
-offset = Vector2(-42, -27)
+position = Vector2(-10, -4.5)
+scale = Vector2(0.137, 0.134)
 
 [node name="NearShinGear" type="Marker2D" parent="Facing/Skeleton/Hip/NearThigh/NearShin"]
 unique_name_in_owner = true
 
 [node name="NearFoot" type="Bone2D" parent="Facing/Skeleton/Hip/NearThigh/NearShin"]
+show_behind_parent = true
 position = Vector2(0, 28)
 rest = Transform2D(1, 0, 0, 1, 0, 28)
 auto_calculate_length_and_angle = false
@@ -120,21 +171,12 @@ length = 16.0
 bone_angle = 0.0
 
 [node name="Art" type="Sprite2D" parent="Facing/Skeleton/Hip/NearThigh/NearShin/NearFoot"]
-texture = ExtResource("foot")
+texture = SubResource("foot")
 centered = false
-scale = Vector2(0.3333333, 0.3333333)
-offset = Vector2(-42, -27)
+position = Vector2(-8.3, -9.6)
+scale = Vector2(0.127, 0.106)
 
 [node name="NearFootGear" type="Marker2D" parent="Facing/Skeleton/Hip/NearThigh/NearShin/NearFoot"]
-unique_name_in_owner = true
-
-[node name="Art" type="Sprite2D" parent="Facing/Skeleton/Hip"]
-texture = ExtResource("waist")
-centered = false
-scale = Vector2(0.3333333, 0.3333333)
-offset = Vector2(-72, -45)
-
-[node name="WaistGear" type="Marker2D" parent="Facing/Skeleton/Hip"]
 unique_name_in_owner = true
 
 [node name="Spine" type="Bone2D" parent="Facing/Skeleton/Hip"]
@@ -163,42 +205,44 @@ bone_angle = -1.4940244
 
 [node name="FarShoulder" type="Bone2D" parent="Facing/Skeleton/Hip/Spine/Chest"]
 show_behind_parent = true
-position = Vector2(18, -8)
-rest = Transform2D(1, 0, 0, 1, 18, -8)
+position = Vector2(13, -7)
+rest = Transform2D(1, 0, 0, 1, 13, -7)
 auto_calculate_length_and_angle = false
-length = 28.0
+length = 25.0
 bone_angle = 1.5707963
 
 [node name="Art" type="Sprite2D" parent="Facing/Skeleton/Hip/Spine/Chest/FarShoulder"]
-texture = ExtResource("shoulder")
+rotation = -0.121
+texture = SubResource("shoulder")
 centered = false
-scale = Vector2(0.3333333, 0.3333333)
-offset = Vector2(-54, -36)
-modulate = Color(0.76, 0.70, 0.71, 1)
+position = Vector2(-10.2, -5.5)
+scale = Vector2(0.126, 0.128)
+modulate = Color(0.81, 0.77, 0.80, 1)
 
 [node name="FarShoulderGear" type="Marker2D" parent="Facing/Skeleton/Hip/Spine/Chest/FarShoulder"]
 unique_name_in_owner = true
 
 [node name="FarElbow" type="Bone2D" parent="Facing/Skeleton/Hip/Spine/Chest/FarShoulder"]
-position = Vector2(0, 28)
-rest = Transform2D(1, 0, 0, 1, 0, 28)
+position = Vector2(0, 25)
+rest = Transform2D(1, 0, 0, 1, 0, 25)
 auto_calculate_length_and_angle = false
-length = 25.0
+length = 23.0
 bone_angle = 1.5707963
 
 [node name="Art" type="Sprite2D" parent="Facing/Skeleton/Hip/Spine/Chest/FarShoulder/FarElbow"]
-texture = ExtResource("forearm")
+rotation = 0.027
+texture = SubResource("forearm")
 centered = false
-scale = Vector2(0.3333333, 0.3333333)
-offset = Vector2(-39, -27)
-modulate = Color(0.76, 0.70, 0.71, 1)
+position = Vector2(-6.3, -4.3)
+scale = Vector2(0.119, 0.12)
+modulate = Color(0.81, 0.77, 0.80, 1)
 
 [node name="FarArmGear" type="Marker2D" parent="Facing/Skeleton/Hip/Spine/Chest/FarShoulder/FarElbow"]
 unique_name_in_owner = true
 
 [node name="FarHand" type="Bone2D" parent="Facing/Skeleton/Hip/Spine/Chest/FarShoulder/FarElbow"]
-position = Vector2(0, 25)
-rest = Transform2D(1, 0, 0, 1, 0, 25)
+position = Vector2(0, 23)
+rest = Transform2D(1, 0, 0, 1, 0, 23)
 auto_calculate_length_and_angle = false
 length = 10.0
 bone_angle = 0.0
@@ -210,22 +254,74 @@ scale = Vector2(0.78, 0.78)
 texture = ExtResource("flask")
 
 [node name="Art" type="Sprite2D" parent="Facing/Skeleton/Hip/Spine/Chest/FarShoulder/FarElbow/FarHand"]
-texture = ExtResource("hand")
+texture = SubResource("offhand")
 centered = false
-scale = Vector2(0.3333333, 0.3333333)
-offset = Vector2(-36, -36)
-modulate = Color(0.76, 0.70, 0.71, 1)
+position = Vector2(-8.4, -9.5)
+scale = Vector2(0.114, 0.114)
+modulate = Color(0.81, 0.77, 0.80, 1)
 
 [node name="OffHandGear" type="Marker2D" parent="Facing/Skeleton/Hip/Spine/Chest/FarShoulder/FarElbow/FarHand"]
 unique_name_in_owner = true
 
 [node name="Art" type="Sprite2D" parent="Facing/Skeleton/Hip/Spine/Chest"]
-texture = ExtResource("torso")
+texture = SubResource("torso")
 centered = false
-scale = Vector2(0.3333333, 0.3333333)
-offset = Vector2(-87, -48)
+position = Vector2(-22.1, -14.2)
+scale = Vector2(0.194, 0.169)
 
 [node name="TorsoGear" type="Marker2D" parent="Facing/Skeleton/Hip/Spine/Chest"]
+unique_name_in_owner = true
+
+[node name="NearShoulder" type="Bone2D" parent="Facing/Skeleton/Hip/Spine/Chest"]
+position = Vector2(-16, -4)
+rest = Transform2D(1, 0, 0, 1, -16, -4)
+auto_calculate_length_and_angle = false
+length = 28.0
+bone_angle = 1.5707963
+
+[node name="Art" type="Sprite2D" parent="Facing/Skeleton/Hip/Spine/Chest/NearShoulder"]
+rotation = -0.122
+texture = SubResource("shoulder")
+centered = false
+position = Vector2(-11.4, -6.3)
+scale = Vector2(0.143, 0.144)
+
+[node name="NearShoulderGear" type="Marker2D" parent="Facing/Skeleton/Hip/Spine/Chest/NearShoulder"]
+unique_name_in_owner = true
+
+[node name="NearElbow" type="Bone2D" parent="Facing/Skeleton/Hip/Spine/Chest/NearShoulder"]
+position = Vector2(0, 28)
+rest = Transform2D(1, 0, 0, 1, 0, 28)
+auto_calculate_length_and_angle = false
+length = 25.0
+bone_angle = 1.5707963
+
+[node name="Art" type="Sprite2D" parent="Facing/Skeleton/Hip/Spine/Chest/NearShoulder/NearElbow"]
+rotation = 0.024
+texture = SubResource("forearm")
+centered = false
+position = Vector2(-7.0, -4.8)
+scale = Vector2(0.132, 0.131)
+
+[node name="NearArmGear" type="Marker2D" parent="Facing/Skeleton/Hip/Spine/Chest/NearShoulder/NearElbow"]
+unique_name_in_owner = true
+
+[node name="NearHand" type="Bone2D" parent="Facing/Skeleton/Hip/Spine/Chest/NearShoulder/NearElbow"]
+position = Vector2(0, 25)
+rest = Transform2D(1, 0, 0, 1, 0, 25)
+auto_calculate_length_and_angle = false
+length = 10.0
+bone_angle = 0.0
+
+[node name="WeaponSocket" type="Marker2D" parent="Facing/Skeleton/Hip/Spine/Chest/NearShoulder/NearElbow/NearHand"]
+
+[node name="Art" type="Sprite2D" parent="Facing/Skeleton/Hip/Spine/Chest/NearShoulder/NearElbow/NearHand"]
+texture = SubResource("hand")
+centered = false
+position = Vector2(-8.7, -9.4)
+scale = Vector2(0.117, 0.117)
+
+[node name="HandGear" type="Marker2D" parent="Facing/Skeleton/Hip/Spine/Chest/NearShoulder/NearElbow/NearHand"]
 unique_name_in_owner = true
 
 [node name="Neck" type="Bone2D" parent="Facing/Skeleton/Hip/Spine/Chest"]
@@ -243,62 +339,21 @@ length = 22.0
 bone_angle = -1.5707963
 
 [node name="Art" type="Sprite2D" parent="Facing/Skeleton/Hip/Spine/Chest/Neck/Head"]
-texture = ExtResource("head")
+texture = SubResource("head")
 centered = false
-scale = Vector2(0.3333333, 0.3333333)
-offset = Vector2(-78, -75)
+position = Vector2(-39, -44.8)
+scale = Vector2(0.2, 0.2)
 
 [node name="HeadGear" type="Marker2D" parent="Facing/Skeleton/Hip/Spine/Chest/Neck/Head"]
 unique_name_in_owner = true
 
-[node name="NearShoulder" type="Bone2D" parent="Facing/Skeleton/Hip/Spine/Chest"]
-position = Vector2(-15, -5)
-rest = Transform2D(1, 0, 0, 1, -15, -5)
-auto_calculate_length_and_angle = false
-length = 28.0
-bone_angle = 1.5707963
-
-[node name="Art" type="Sprite2D" parent="Facing/Skeleton/Hip/Spine/Chest/NearShoulder"]
-texture = ExtResource("shoulder")
+[node name="Art" type="Sprite2D" parent="Facing/Skeleton/Hip"]
+texture = SubResource("waist")
 centered = false
-scale = Vector2(0.3333333, 0.3333333)
-offset = Vector2(-54, -36)
+position = Vector2(-24.3, -9.8)
+scale = Vector2(0.182, 0.159)
 
-[node name="NearShoulderGear" type="Marker2D" parent="Facing/Skeleton/Hip/Spine/Chest/NearShoulder"]
-unique_name_in_owner = true
-
-[node name="NearElbow" type="Bone2D" parent="Facing/Skeleton/Hip/Spine/Chest/NearShoulder"]
-position = Vector2(0, 28)
-rest = Transform2D(1, 0, 0, 1, 0, 28)
-auto_calculate_length_and_angle = false
-length = 25.0
-bone_angle = 1.5707963
-
-[node name="Art" type="Sprite2D" parent="Facing/Skeleton/Hip/Spine/Chest/NearShoulder/NearElbow"]
-texture = ExtResource("forearm")
-centered = false
-scale = Vector2(0.3333333, 0.3333333)
-offset = Vector2(-39, -27)
-
-[node name="NearArmGear" type="Marker2D" parent="Facing/Skeleton/Hip/Spine/Chest/NearShoulder/NearElbow"]
-unique_name_in_owner = true
-
-[node name="NearHand" type="Bone2D" parent="Facing/Skeleton/Hip/Spine/Chest/NearShoulder/NearElbow"]
-position = Vector2(0, 25)
-rest = Transform2D(1, 0, 0, 1, 0, 25)
-auto_calculate_length_and_angle = false
-length = 10.0
-bone_angle = 0.0
-
-[node name="WeaponSocket" type="Marker2D" parent="Facing/Skeleton/Hip/Spine/Chest/NearShoulder/NearElbow/NearHand"]
-
-[node name="Art" type="Sprite2D" parent="Facing/Skeleton/Hip/Spine/Chest/NearShoulder/NearElbow/NearHand"]
-texture = ExtResource("hand")
-centered = false
-scale = Vector2(0.3333333, 0.3333333)
-offset = Vector2(-36, -36)
-
-[node name="HandGear" type="Marker2D" parent="Facing/Skeleton/Hip/Spine/Chest/NearShoulder/NearElbow/NearHand"]
+[node name="WaistGear" type="Marker2D" parent="Facing/Skeleton/Hip"]
 unique_name_in_owner = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]

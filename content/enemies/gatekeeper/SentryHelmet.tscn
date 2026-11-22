@@ -1,9 +1,15 @@
 [gd_scene format=3]
 
-[ext_resource type="Texture2D" path="res://content/enemies/gatekeeper/helmet_overlay.svg" id="1"]
+[ext_resource type="Texture2D" path="res://content/enemies/gatekeeper/gatekeeper_atlas.png" id="1"]
+
+[sub_resource type="AtlasTexture" id="helmet"]
+atlas = ExtResource("1")
+region = Rect2(1103, 808, 307, 194)
+filter_clip = true
 
 [node name="SentryHelmet" type="Sprite2D"]
-texture = ExtResource("1")
+texture_filter = 4
+texture = SubResource("helmet")
 centered = false
-scale = Vector2(0.3333333, 0.3333333)
-offset = Vector2(-81, -108)
+position = Vector2(-36.0, -43.5)
+scale = Vector2(0.197, 0.197)

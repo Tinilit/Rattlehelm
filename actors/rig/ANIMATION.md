@@ -12,13 +12,15 @@ The guide pages on the documentation site returned an access error in the build 
 
 ## Character layers
 
-The base watchman has bare feet, exposed skin, trousers and a rusted sword. The waist, upper and lower legs, foot, head, torso, upper arm, forearm and hand have separate painted pivots. Both rigs put the far shoulder and thigh behind their parents. On the chest, torso art and armor sit between the far and near arm branches. The far shoulder sits high under the outer chest contour, and the elbow raises the far hand to chest height during the guard. Its stride keys follow the opposing leg and avoid carrying the hand into the hip silhouette. The longer torso and smaller head leave negative space around the elbow and between the legs through the stride. The Gatekeeper wears a helmet scene mounted on its head bone.
+The base watchman has bare feet, exposed skin, trousers and a rusted sword. Each fighter has an original painted atlas. Each body part uses a separate `AtlasTexture` region, with its painted joint centered on the corresponding bone. The sword and club use separate regions from the same atlases.
+
+The far arm and thigh draw behind the torso and hip. On the watchman, the shins tuck behind the thighs at the knees, the bare feet sit behind the trouser cuffs and the sash covers the lower edge of the torso. The head draws over the shoulder during the windup. The free arm uses a shorter far-side silhouette and its own fist sprite. The idle keys keep that hand below the sword and the stride swings it against the opposite leg. The gripping hand draws over the sword handle. These layers use scene tree order so the entire fighter sorts with the other actors at floor depth. The Gatekeeper wears a helmet scene mounted on its head bone.
 
 To add gear, use a scene rooted in Node2D with the joint at its origin. Attach it with `FighterRig.equip_wearable()` or instance it under a named gear anchor in either rig. Use `HeadGear`, `TorsoGear` and `BackGear` for core items and the matching `Near` and `Far` limb anchors for armor. `OffHandGear` is available for a shield or offhand item. The held weapon uses its own socket. A sword scene marks its damaging edge with `BladeRoot` and `Tip`.
 
 ## Clips and acceptance checks
 
-These clips share the same skeleton layout in `WardenRig.tscn` and `GatekeeperRig.tscn`. The run tests resolve every clip track against both rigs and check the wrist socket, arm lengths, torso draw order and far hand in both facing directions. The browser playthrough exercises the common room and combat path.
+These clips share the same skeleton layout in `WardenRig.tscn` and `GatekeeperRig.tscn`. The run tests resolve clip tracks against both rigs, check the arm hierarchy and sample hand clearance in both facing directions. They also check that the watchman's painted leg joints overlap through a full stride. The browser playthrough exercises the common room and combat path.
 
 | ID | Family and reference | Authored motion | Acceptance check |
 | --- | --- | --- | --- |
@@ -28,7 +30,7 @@ These clips share the same skeleton layout in `WardenRig.tscn` and `GatekeeperRi
 | `takeoff` | Locomotion and blending, action timing | Three ticks of knee compression and extension | The feet stay on the floor during anticipation |
 | `airborne` | Locomotion and blending | Tucked rise, open apex and falling stance | The silhouette rises about 90 px while the shadow stays on the floor |
 | `land` | Locomotion and blending | Absorb and recover over seven ticks | Landing reaches the same floor plane and emits dust at the feet |
-| `roll` | Action timing | Tucked hips turn through explicit 0–360 degree keys | Observe a full turn on both sides and test the 24-tick movement against a wall |
+| `roll` | Action timing | Head tucks into the turn and hip height follows the part of the pose touching the floor | Observe a full turn on both sides and test the 24-tick movement against a wall |
 | `stagger` | Action timing | Pelvis checks its motion and the head lags away from the hit | A confirmed hit places the reaction in the same simulation tick |
 | `fall` | Action timing | Lean back, buckle and settle low | A fatal hit leaves an inactive fighter on the floor |
 | `flask` | Action timing | Far hand lifts the bottle toward the face | Interrupt before tick 16 or let the cue spend exactly one charge and restore health |

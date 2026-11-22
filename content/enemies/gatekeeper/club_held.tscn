@@ -1,6 +1,6 @@
 [gd_scene format=3]
 
-[ext_resource type="Texture2D" path="res://content/enemies/gatekeeper/club.svg" id="1"]
+[ext_resource type="Texture2D" path="res://content/enemies/gatekeeper/club_texture.tres" id="1"]
 
 [node name="Club" type="Node2D"]
 
@@ -12,5 +12,6 @@ position = Vector2(68, -1)
 [node name="Artwork" type="Sprite2D" parent="."]
 texture = ExtResource("1")
 centered = false
-scale = Vector2(0.3333333, 0.3333333)
-offset = Vector2(-51, -69)
+texture_filter = 4
+position = Vector2(-17.1, -15.1)
+scale = Vector2(0.256, 0.256)

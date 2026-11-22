@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://oc3dly6klnb6"
-path="res://.godot/imported/forearm.svg-83c54d4e7ed14ba75530bf15308acb72.ctex"
+uid="uid://d20r61ine4ssb"
+path="res://.godot/imported/watchman_atlas.png-9a38586715d6a96264fa58029a8dfefe.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://content/enemies/gatekeeper/forearm.svg"
-dest_files=["res://.godot/imported/forearm.svg-83c54d4e7ed14ba75530bf15308acb72.ctex"]
+source_file="res://actors/hero/watchman_atlas.png"
+dest_files=["res://.godot/imported/watchman_atlas.png-9a38586715d6a96264fa58029a8dfefe.ctex"]
 
 [params]
 
@@ -23,7 +23,7 @@ compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=false
+mipmaps/generate=true
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
@@ -38,6 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=3.0
-editor/scale_with_editor_scale=false
-editor/convert_colors_with_editor_theme=false
