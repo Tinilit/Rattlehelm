@@ -20,6 +20,8 @@ The far arm and thigh draw behind the torso and hip. The watchman's shins tuck b
 
 The watchman's `NearThigh` and `FarThigh` pivot at separate sockets inside the painted pelvis. Each thigh carries its shin and foot. The waist artwork covers both upper seams and tapers into the thighs below the sash. The far thigh is drawn slightly narrower for the three-quarter view. [Godot leg chain](https://docs.godotengine.org/en/stable/tutorials/animation/cutout_animation.html#ik-chains)
 
+The default watchman displays the fitted `PaintedGuard` sprite in settled idle while holding the rusted sword with empty gear slots. Its registration matches the first idle key at the floor and sword grip. The skeleton holds that key under the paint so the stride starts from the same position. It draws during movement, attacks and equipped outfits.
+
 To add gear, use a scene rooted in Node2D with the joint at its origin. Attach it with `FighterRig.equip_wearable()` or instance it under a named gear anchor in either rig. Use `HeadGear`, `TorsoGear` and `BackGear` for core items and the matching `Near` and `Far` limb anchors for armor. `OffHandGear` is available for a shield or offhand item. The held weapon uses its own socket. A sword scene marks its damaging edge with `BladeRoot` and `Tip`.
 
 On the watchman, the hand bones pivot at the wrist. Fit the painted wrist to the end of the forearm, then align `WeaponSocket` with the center of the closed fingers. The weapon's `Grip` marker sits on its handle. The near shoulder material feathers the upper edge of the arm into the painted deltoid. Its fade starts at the shoulder region's top row in the atlas.

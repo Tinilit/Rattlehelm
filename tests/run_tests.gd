@@ -24,6 +24,7 @@ func _run() -> void:
 	root.add_child(_input_source)
 	_input_source.enabled = true
 	_catalog_and_rigs()
+	_painted_guard_pose()
 	_far_arm_layers_and_pose()
 	await _idle_and_tap()
 	await _targets_and_combo()
@@ -76,6 +77,49 @@ func _catalog_and_rigs() -> void:
 		_check(outfit_ok and rig.equip_wearable(&"HeadGear", null) and slot.get_child_count() == 0,
 			"%s removable helmet follows the head" % actor.name, true, outfit_ok)
 		actor.free()
+
+
+func _painted_guard_pose() -> void:
+	var hero := ContentCatalog.WARDEN.instantiate() as Combatant
+	hero.weapon = SWORD
+	root.add_child(hero)
+	var rig := hero.rig
+	var art := rig.get_node(^"Facing/PaintedGuard") as Sprite2D
+	var skeleton := rig.get_node(^"Facing/Skeleton") as Skeleton2D
+	var starting_tip := rig.weapon_tip()
+	for tick in 55:
+		rig.sample(&"idle", 0, 1, 0.0, CombatSpace.STEP)
+	var painted := art.visible and not skeleton.visible
+	var tip_held := rig.weapon_tip().is_equal_approx(starting_tip)
+	_check(painted and tip_held, "Default guard holds the fitted illustration and sword pose",
+		[true, true], [painted, tip_held])
+
+	rig.sample(&"idle", 0, -1, 0.0, CombatSpace.STEP)
+	_check(art.visible and art.global_transform.determinant() < 0.0,
+		"Painted guard mirrors with the fighter", true, art.global_transform.determinant())
+	rig.sample(&"stride", 1, -1, 0.0, CombatSpace.STEP)
+	var stride_visible := skeleton.visible and not art.visible
+	for tick in 10:
+		rig.sample(&"idle", 2, -1, 0.0, CombatSpace.STEP)
+	var settled := art.visible and not skeleton.visible
+	rig.sample(&"slash_1", 3, -1, 0.0, CombatSpace.STEP)
+	var slash_visible := skeleton.visible and not art.visible
+	_check(stride_visible and settled and slash_visible, "Guard and cutout switch across locomotion and attacks",
+		[true, true, true], [stride_visible, settled, slash_visible])
+
+	rig.sample(&"idle", 4, -1, 0.0, CombatSpace.STEP)
+	rig.equip_wearable(&"HeadGear", HELMET)
+	rig.sample(&"idle", 4, -1, 0.0, CombatSpace.STEP)
+	var helmet_visible := skeleton.visible and not art.visible
+	rig.equip_wearable(&"HeadGear", null)
+	rig.equip(CLUB)
+	rig.sample(&"idle", 4, -1, 0.0, CombatSpace.STEP)
+	var club_visible := skeleton.visible and not art.visible
+	rig.equip(SWORD)
+	rig.sample(&"idle", 4, -1, 0.0, CombatSpace.STEP)
+	_check(helmet_visible and club_visible and art.visible, "Painted guard follows the default outfit",
+		[true, true, true], [helmet_visible, club_visible, art.visible])
+	hero.free()
 
 
 func _far_arm_layers_and_pose() -> void:

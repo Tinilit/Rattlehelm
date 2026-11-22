@@ -8,6 +8,8 @@
 [ext_resource type="Shader" path="res://actors/hero/shoulder_join.gdshader" id="shoulder_join"]
 [ext_resource type="Texture2D" path="res://actors/hero/watchman_palm.png" id="palm"]
 [ext_resource type="Texture2D" path="res://actors/hero/watchman_waist.png" id="waist_paint"]
+[ext_resource type="Texture2D" path="res://actors/hero/watchman_guard.png" id="guard_paint"]
+[ext_resource type="PackedScene" path="res://content/weapons/sword/sword_held.tscn" id="guard_weapon"]
 
 [sub_resource type="AtlasTexture" id="head"]
 atlas = ExtResource("paint")
@@ -72,6 +74,7 @@ shader_parameter/overlap_px = 48.0
 [node name="WardenRig" type="Node2D"]
 texture_filter = 4
 script = ExtResource("1")
+painted_guard_weapon = ExtResource("guard_weapon")
 
 [node name="Facing" type="Node2D" parent="."]
 
@@ -375,6 +378,13 @@ centered = false
 
 [node name="HandGear" type="Marker2D" parent="Facing/Skeleton/Hip/Spine/Chest/NearShoulder/NearElbow/NearHand"]
 unique_name_in_owner = true
+
+[node name="PaintedGuard" type="Sprite2D" parent="Facing"]
+visible = false
+position = Vector2(-53.26, -169.52)
+scale = Vector2(0.13156, 0.13156)
+texture = ExtResource("guard_paint")
+centered = false
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {&"": ExtResource("2")}
