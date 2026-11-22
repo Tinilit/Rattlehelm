@@ -41,7 +41,7 @@ messages = {
 [&"", &"YARD_TARGETS"]: [&"Straw & iron"],
 [&"", &"ENEMY_GATEKEEPER"]: [&"Gatekeeper"],
 [&"", &"WEAPON_CLUB"]: [&"Ironbound club"],
-[&"", &"WEAPON_SWORD"]: [&"Watchman\'s sword"],
+[&"", &"WEAPON_SWORD"]: [&"Rusty sword"],
 [&"", &"GATE_NAME"]: [&"The Watch Gate"],
 [&"", &"YARD_NAME"]: [&"Training yard"],
 [&"", &"RETURN_TITLE"]: [&"Return to title"],

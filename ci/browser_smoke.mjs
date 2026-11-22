@@ -194,11 +194,12 @@ async function runSmoke() {
     assert.deepEqual([entry.healthNumbers, entry.shake, entry.particles], [false, false, false]);
   }
   await moveUntil(['s'], 'heroY', 575);
-  await moveUntil(['d'], 'heroX', 463);
+  await moveUntil(['d'], 'heroX', 414);
   await page.keyboard.press('j');
   await waitFor('hits', 'gte', 1);
   const hit = await snapshot();
   assert.ok(hit.heroX > entry.heroX && hit.heroY > entry.heroY, 'Input did not move on both floor axes');
+  assert.ok(hit.heroX <= 435, 'The slash must reach straw from outside the old grounded reach');
   assert.equal(hit.action, 'slash_1');
   assert.equal(hit.attackFacing, 1);
   assert.equal(hit.impactMaterial, 1);

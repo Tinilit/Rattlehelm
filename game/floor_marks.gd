@@ -36,7 +36,12 @@ func _draw() -> void:
 			draw_line(actor.position + Vector2.LEFT * 6.0, actor.position + Vector2.RIGHT * 6.0, Color.AQUAMARINE, 1.0)
 			draw_line(actor.position + Vector2.UP * 6.0, actor.position + Vector2.DOWN * 6.0, Color.AQUAMARINE, 1.0)
 			if actor.action.kind == ActionState.Kind.ATTACK and actor.action.attack.is_active(maxi(0, actor.action.tick - 1)):
-				draw_rect(_zone(actor, actor.action.attack), Color.AQUAMARINE, false, 1.5)
+				if actor.rig != null and actor.action.attack.uses_blade_span:
+					var blade := actor.rig.weapon_edge()
+					if blade.size() == 2:
+						draw_line(to_local(blade[0]), to_local(blade[1]), Color.AQUAMARINE, 2.0, true)
+				else:
+					draw_rect(_zone(actor, actor.action.attack), Color.AQUAMARINE, false, 1.5)
 
 
 func _draw_threat(actor: Combatant, definition: AttackDef, tick: int) -> void:

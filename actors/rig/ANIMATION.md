@@ -10,6 +10,12 @@ The guide pages on the documentation site returned an access error in the build 
 - **Room props.** The portcullis easing and practice target damping are procedural property motion, using the same ownership principle as a property track. The room allows the interaction only when the portcullis has finished rising. [2D sprite animation](https://raw.githubusercontent.com/godotengine/godot-docs/4.7/tutorials/2d/2d_sprite_animation.rst) · [Animation track types](https://raw.githubusercontent.com/godotengine/godot-docs/4.7/tutorials/animation/animation_track_types.rst)
 - **Effects.** Trail samples come from the tip marker and expire after their owner stops writing samples. Finite spark objects originate at the resolved contact with a local lifetime. Camera shake is an offset on the room camera. The HUD has a separate CanvasLayer. [2D particle systems](https://raw.githubusercontent.com/godotengine/godot-docs/4.7/tutorials/2d/particle_systems_2d.rst) · [Tween](https://raw.githubusercontent.com/godotengine/godot-docs/4.7/classes/class_tween.rst) · [Camera2D](https://raw.githubusercontent.com/godotengine/godot-docs/4.7/classes/class_camera2d.rst)
 
+## Character layers
+
+The base watchman has bare feet, exposed skin, trousers and a rusted sword. The waist, upper and lower legs, foot, head, torso, upper arm, forearm and hand have separate painted pivots. Far limbs render behind the torso. The longer torso and smaller head leave negative space around the elbow and between the legs through the stride. The Gatekeeper wears a helmet scene mounted on its head bone.
+
+To add gear, use a scene rooted in Node2D with the joint at its origin. Attach it with `FighterRig.equip_wearable()` or instance it under a named gear anchor in either rig. Use `HeadGear`, `TorsoGear` and `BackGear` for core items and the matching `Near` and `Far` limb anchors for armor. `OffHandGear` is available for a shield or offhand item. The held weapon uses its own socket. A sword scene marks its damaging edge with `BladeRoot` and `Tip`.
+
 ## Clips and acceptance checks
 
 These clips share the same skeleton layout in `WardenRig.tscn` and `GatekeeperRig.tscn`. The run tests resolve every clip track against both rigs and check the wrist socket. The browser playthrough exercises the common room and combat path.
@@ -17,18 +23,18 @@ These clips share the same skeleton layout in `WardenRig.tscn` and `GatekeeperRi
 | ID | Family and reference | Authored motion | Acceptance check |
 | --- | --- | --- | --- |
 | `RESET` | Cutout rigs, locomotion | One key for every animated property | Reload either rig and compare its neutral stance |
-| `idle` | Locomotion and blending | Small chest and cape motion with planted feet | Ten seconds of idle leave floor position and attack state intact |
-| `stride` | Locomotion and blending | Alternating support with two passing poses | Start and stop in both directions and watch the support foot |
+| `idle` | Locomotion and blending | Small chest and arm motion with a planted stance | Ten seconds of idle leave floor position and attack state intact |
+| `stride` | Locomotion and blending | Separate reach, heel contact, push-off and swing poses | Start and stop in both directions and watch the support foot |
 | `takeoff` | Locomotion and blending, action timing | Three ticks of knee compression and extension | The feet stay on the floor during anticipation |
 | `airborne` | Locomotion and blending | Tucked rise, open apex and falling stance | The silhouette rises about 90 px while the shadow stays on the floor |
 | `land` | Locomotion and blending | Absorb and recover over seven ticks | Landing reaches the same floor plane and emits dust at the feet |
 | `roll` | Action timing | Tucked hips turn through explicit 0–360 degree keys | Observe a full turn on both sides and test the 24-tick movement against a wall |
-| `stagger` | Action timing | Pelvis checks its motion and the helmet lags away from the hit | A confirmed hit places the reaction in the same simulation tick |
+| `stagger` | Action timing | Pelvis checks its motion and the head lags away from the hit | A confirmed hit places the reaction in the same simulation tick |
 | `fall` | Action timing | Lean back, buckle and settle low | A fatal hit leaves an inactive fighter on the floor |
-| `flask` | Action timing | Far hand lifts the bottle toward the visor | Interrupt before tick 16 or let the cue spend exactly one charge and restore health |
-| `kick` | Action timing | Far leg supports weight as the near boot pushes forward | Use a neutral tap at close range and see the target move away |
+| `flask` | Action timing | Far hand lifts the bottle toward the face | Interrupt before tick 16 or let the cue spend exactly one charge and restore health |
+| `kick` | Action timing | Far leg supports weight as the near foot pushes forward | Use a neutral tap at close range and see the target move away |
 | `air_slash` | Action timing | Tucked launch with a descending blade | Make one deliberate attack per jump and verify its height band |
-| `slash_1` | Action timing | Near foot anchors a high diagonal cut and the cape follows through | Tick 5 contacts on the same lane and misses when the feet are offset |
+| `slash_1` | Action timing | Near foot anchors a high diagonal cut and the torso follows through | The sampled blade edge hits across a gap on tick 5 and misses a target in a different lane |
 | `slash_2` | Action timing | Reset from the first cut into a rising reverse arc | A buffered tap reaches the second clip and opens a new hit list at tick 6 |
 | `slash_3` | Action timing | Wider weight shift and a longer low finish | Tick 10 opens the sweep and the follow-through remains readable in both directions |
 | `club_sweep` | Action timing | Shoulder lifts into a committed swing and sinks into recovery | The lane preview warns before tick 29 and a sidestep produces a clean miss |

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c5agwm43n78wh"
-path="res://.godot/imported/boot.svg-760cbf669bc22b742ae71ad684cfe83b.ctex"
+uid="uid://b2ype8bxp75ww"
+path="res://.godot/imported/foot.svg-d808bfc3a107103186018688e96978df.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://actors/hero/boot.svg"
-dest_files=["res://.godot/imported/boot.svg-760cbf669bc22b742ae71ad684cfe83b.ctex"]
+source_file="res://actors/hero/foot.svg"
+dest_files=["res://.godot/imported/foot.svg-d808bfc3a107103186018688e96978df.ctex"]
 
 [params]
 

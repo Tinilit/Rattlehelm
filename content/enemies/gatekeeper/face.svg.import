@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://eueuvr2mloog"
-path="res://.godot/imported/helmet.svg-34f92b972ae940d5d49e41fbb63d11dd.ctex"
+uid="uid://de7uioiqmi8et"
+path="res://.godot/imported/face.svg-88f4f47b0c8644ce8e02971aefe2de5f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://content/enemies/gatekeeper/helmet.svg"
-dest_files=["res://.godot/imported/helmet.svg-34f92b972ae940d5d49e41fbb63d11dd.ctex"]
+source_file="res://content/enemies/gatekeeper/face.svg"
+dest_files=["res://.godot/imported/face.svg-88f4f47b0c8644ce8e02971aefe2de5f.ctex"]
 
 [params]
 

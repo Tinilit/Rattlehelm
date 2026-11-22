@@ -151,6 +151,9 @@ func _physics_process(delta: float) -> void:
 			intent = CombatIntent.new()
 		actor.tick(intent, self, clock)
 
+	for actor: Combatant in actor_list:
+		actor.sample_pose(delta)
+
 	var contacts := ContactResolver.gather(actor_list, get_world_2d().direct_space_state)
 	_note_whiffs()
 	for contact: CombatContact in contacts:
@@ -191,7 +194,10 @@ func _present_contacts(contacts: Array[CombatContact]) -> void:
 	var attacks_played: Dictionary[int, Dictionary] = {}
 	for contact: CombatContact in contacts:
 		var source := contact.source
-		if source.rig != null and source.action.attack == contact.attack and contact.attack.contact_on_weapon:
+		if (
+			source.rig != null and source.action.attack == contact.attack
+			and contact.attack.contact_on_weapon and not contact.attack.uses_blade_span
+		):
 			contact.point = source.rig.point_on_weapon(contact.point)
 		var material := contact.target.contact_material()
 		var sounds_played: Dictionary = attacks_played.get(source.spawn_id, {})

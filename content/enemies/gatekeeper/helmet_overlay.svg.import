@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://celtfwm23fo6l"
-path="res://.godot/imported/helmet.svg-a01a0fad625701901c20479d0b1f8549.ctex"
+uid="uid://blpv22cd20xwa"
+path="res://.godot/imported/helmet_overlay.svg-4cdbef9a2dc7ccbf77a106d0290288c7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://actors/hero/helmet.svg"
-dest_files=["res://.godot/imported/helmet.svg-a01a0fad625701901c20479d0b1f8549.ctex"]
+source_file="res://content/enemies/gatekeeper/helmet_overlay.svg"
+dest_files=["res://.godot/imported/helmet_overlay.svg-4cdbef9a2dc7ccbf77a106d0290288c7.ctex"]
 
 [params]
 

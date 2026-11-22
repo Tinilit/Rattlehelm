@@ -6,6 +6,7 @@ const YARD := preload("res://content/rooms/training/TrainingYard.tscn")
 const GUARD := preload("res://content/enemies/gatekeeper/Gatekeeper.tscn")
 const SWORD := preload("res://content/weapons/sword/sword.tres")
 const CLUB := preload("res://content/enemies/gatekeeper/club.tres")
+const HELMET := preload("res://content/enemies/gatekeeper/SentryHelmet.tscn")
 
 var _room: RoomController
 var _input_source: PlayerCommandSource
@@ -25,6 +26,8 @@ func _run() -> void:
 	_catalog_and_rigs()
 	await _idle_and_tap()
 	await _targets_and_combo()
+	await _blade_reach(1)
+	await _blade_reach(-1)
 	await _kick()
 	await _wall_and_roll()
 	await _jump_and_action_priority()
@@ -64,6 +67,13 @@ func _catalog_and_rigs() -> void:
 				if not rig.has_node(node_path):
 					broken_paths.append("%s:%s" % [clip_id, node_path])
 		_check(broken_paths.is_empty(), "%s animation track targets" % actor.name, [], broken_paths)
+		var slot := rig.get_node(^"%HeadGear") as Marker2D
+		var initial_items := 0 if scene == ContentCatalog.WARDEN else 1
+		_check(slot.get_child_count() == initial_items, "%s headgear at spawn" % actor.name,
+			initial_items, slot.get_child_count())
+		var outfit_ok := rig.equip_wearable(&"HeadGear", HELMET) and slot.get_child_count() == 1
+		_check(outfit_ok and rig.equip_wearable(&"HeadGear", null) and slot.get_child_count() == 0,
+			"%s removable helmet follows the head" % actor.name, true, outfit_ok)
 		actor.free()
 
 
@@ -131,6 +141,22 @@ func _targets_and_combo() -> void:
 		"Third swing finishes both in-lane targets", [0, 0, 44], [left.health, right.health, far.health])
 	_check(hero.last_action == &"slash_3" and hero.action.impact_index == 2,
 		"Finisher action index", [&"slash_3", 2], [hero.last_action, hero.action.impact_index])
+
+
+func _blade_reach(facing: int) -> void:
+	_load_room(WATCH_GATE)
+	var hero := _room.hero
+	hero.position = Vector2(640, 550)
+	hero.facing = facing
+	var at_tip := _room.spawn_actor(GUARD, CLUB, Vector2(640 + 112 * facing, 550), 1, 44, -facing)
+	var too_far := _room.spawn_actor(GUARD, CLUB, Vector2(640 + 156 * facing, 550), 1, 44, -facing)
+	var other_lane := _room.spawn_actor(GUARD, CLUB, Vector2(640 + 112 * facing, 590), 1, 44, -facing)
+	_tap(KEY_J)
+	await _until(func() -> bool: return hero.action.kind == ActionState.Kind.ATTACK, 4)
+	await _until(func() -> bool: return hero.action.kind == ActionState.Kind.FREE, 30)
+	_check([at_tip.health, too_far.health, other_lane.health] == [32, 44, 44],
+		"Visible sword edge reaches across a gap facing %d" % facing,
+		[32, 44, 44], [at_tip.health, too_far.health, other_lane.health])
 
 
 func _kick() -> void:
@@ -204,8 +230,7 @@ func _same_tick_trade() -> void:
 	var target := _room.spawn_actor(GUARD, SWORD, Vector2(619, 545), 1, 44, -1)
 	for actor: Combatant in [hero, target]:
 		actor.action.start(ActionState.Kind.ATTACK, SWORD.opener)
-		actor.action.tick = SWORD.opener.startup
-	await _until(func() -> bool: return _room.clock > 0, 4)
+	await _until(func() -> bool: return _room.clock >= SWORD.opener.startup + 1, 10)
 	_check([hero.health, target.health] == [88, 32], "Both contacts survive attack interruption in the same tick",
 		[88, 32], [hero.health, target.health])
 

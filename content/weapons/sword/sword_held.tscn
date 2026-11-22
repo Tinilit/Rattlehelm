@@ -6,6 +6,9 @@
 
 [node name="Grip" type="Marker2D" parent="."]
 
+[node name="BladeRoot" type="Marker2D" parent="."]
+position = Vector2(11, 0)
+
 [node name="Tip" type="Marker2D" parent="."]
 position = Vector2(67, -1)
 

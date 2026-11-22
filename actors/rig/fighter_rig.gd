@@ -14,6 +14,7 @@ const SOCKET_PATH := ^"Facing/Skeleton/Hip/Spine/Chest/NearShoulder/NearElbow/Ne
 
 var _held: Node2D
 var _tip: Marker2D
+var _blade_root: Marker2D
 var _clip: StringName
 var _revision := -1
 var _facing := 1
@@ -28,6 +29,33 @@ func equip(weapon: WeaponDef) -> void:
 	var grip: Marker2D = _held.get_node(^"Grip")
 	_held.position = -grip.position
 	_tip = _held.get_node(^"Tip")
+	_blade_root = _held.get_node_or_null(^"BladeRoot") as Marker2D
+
+
+func equip_wearable(slot: StringName, wearable: PackedScene) -> bool:
+	var mount := get_node_or_null(NodePath("%" + String(slot))) as Marker2D
+	# Gear anchors reserve their child for a single visual item.
+	if mount == null or mount == _socket:
+		return false
+	var item: Node2D
+	if wearable != null:
+		var node := wearable.instantiate()
+		item = node as Node2D
+		if item == null:
+			node.free()
+			return false
+	for previous: Node in mount.get_children():
+		mount.remove_child(previous)
+		previous.queue_free()
+	if item != null:
+		mount.add_child(item)
+	return true
+
+
+func weapon_edge() -> PackedVector2Array:
+	if not is_instance_valid(_blade_root) or not is_instance_valid(_tip):
+		return PackedVector2Array()
+	return PackedVector2Array([_blade_root.global_position, _tip.global_position])
 
 
 func sample(clip: StringName, revision: int, facing: int, height: float, delta: float) -> void:

@@ -20,7 +20,7 @@ const FLASK_HEAL := 30
 @export var hurt_width := 10.0
 @export var hurt_depth := 4.0
 @export var hurt_floor := 5.0
-@export var hurt_ceiling := 125.0
+@export var hurt_ceiling := 150.0
 
 @onready var rig: FighterRig = get_node_or_null(^"Rig") as FighterRig
 @onready var _shadow: Sprite2D = $Shadow
@@ -50,6 +50,7 @@ var _pending_until := 0
 var _stagger_ticks := 0
 var _air_attack_spent := false
 var _allows_actor_collision := true
+var _sampled_revision := -1
 
 
 func _ready() -> void:
@@ -57,6 +58,7 @@ func _ready() -> void:
 	if rig != null:
 		if weapon != null:
 			rig.equip(weapon)
+		sample_pose(0.0)
 		present(0.0)
 
 
@@ -301,7 +303,18 @@ func take_contact(contact: CombatContact) -> void:
 	_begin(ActionState.Kind.STAGGER, &"stagger")
 
 
-func present(delta: float) -> void:
+func sample_pose(delta: float) -> void:
+	if rig != null:
+		var clip := _current_clip()
+		var pose_delta := delta
+		if clip == &"stride":
+			# The stride cycle was keyed for a full-speed run along X.
+			pose_delta *= minf(_floor_velocity.length() / CombatSpace.SPEED.x, 1.0)
+		rig.sample(clip, action.revision, facing, height, pose_delta)
+		_sampled_revision = action.revision
+
+
+func present(_delta: float) -> void:
 	if rig == null:
 		return
 	_shadow.scale = Vector2.ONE * lerpf(0.75, 0.56, clampf(height / 95.0, 0.0, 1.0))
@@ -309,7 +322,8 @@ func present(delta: float) -> void:
 	rig.modulate = Color(1.22, 0.89, 0.78) if (
 		invulnerable_ticks > 0 and invulnerable_ticks % 6 < 3 and not reduce_flashes
 	) else Color.WHITE
-	rig.sample(_current_clip(), action.revision, facing, height, delta)
+	if action.revision != _sampled_revision:
+		sample_pose(0.0)
 	if action.kind == ActionState.Kind.FREE and height == 0.0 and action.tick % 16 == 8:
 		if position.distance_squared_to(previous_floor) > 2.0:
 			sound_requested.emit(preload("res://content/audio/boot.wav"), position)

@@ -100,6 +100,11 @@ func _validate_weapon_rig(
 		_error(weapon, "opener.clip", "actor has no animation player or tree")
 		return
 
+	var has_blade_root := false
+	if weapon.held_scene != null:
+		var held := weapon.held_scene.instantiate()
+		has_blade_root = held.get_node_or_null(^"BladeRoot") is Marker2D
+		held.free()
 	for first: AttackDef in [weapon.opener, weapon.kick, weapon.aerial]:
 		var attack := first
 		var chain: Array[AttackDef] = []
@@ -111,6 +116,8 @@ func _validate_weapon_rig(
 			if not attack_ids.has(attack.id) or attack_ids[attack.id] != attack:
 				if _check_id(attack, attack.id, attack_ids):
 					attack_ids[attack.id] = attack
+			if attack.uses_blade_span and not has_blade_root:
+				_error(attack, "uses_blade_span", "held scene needs BladeRoot and Tip markers")
 			_validate_attack(attack, player, tree)
 			attack = attack.follow_up
 

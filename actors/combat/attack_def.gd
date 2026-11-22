@@ -17,6 +17,7 @@ enum ReachHeight { BODY, LOW, AIR }
 @export var damage := 12
 @export var front_start := 4.0
 @export var reach := 62.0
+@export var uses_blade_span := false
 @export var half_depth := 17.0
 @export var height_band := Vector2(22.0, 104.0)
 @export var reach_height: ReachHeight = ReachHeight.BODY

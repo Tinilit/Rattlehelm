@@ -38,7 +38,7 @@ done
 
 ## Author and check content
 
-- Create an attack `.tres` with a unique ID, fixed-tick phases, a volume and an animation state. Assign it to a `WeaponDef` and point the weapon at a held scene with `Grip` and `Tip` markers. The sword resources show the complete path from the pack to the hand socket and attack executor. See [the animation catalog](actors/rig/ANIMATION.md).
+- Create an attack `.tres` with a unique ID, fixed-tick phases, contact settings and an animation state. Assign it to a `WeaponDef` and point the weapon at a held scene with `Grip` and `Tip` markers. Blade-driven strikes also need a `BladeRoot` marker. Their reach follows the animated edge during active ticks. The sword resources show the complete path from the pack to the hand socket and attack executor. See [the animation catalog](actors/rig/ANIMATION.md).
 - Create an `EnemyDef` that references a fighter scene and a registered weapon. Add the enemy to an `EncounterDef` roster and provide one spawn marker per roster entry. The current enemy policy approaches, lines up and uses the authored opener.
 - Add the `RoomDef`, enemy and weapon definitions to [the Fortress pack](content/packs/fortress.tres). Add the room ID to the playtest route in [RunDirector](game/run_director.gd) when it should appear in a run. Run the headless check, then play into the room from the main menu and verify the exit condition. The catalog reports invalid definitions with their resource path and field.
 
@@ -67,7 +67,7 @@ Stage A covers the practice targets, the single Gatekeeper encounter and the swo
 
 The authored motion, art and audio were created for Rattlehelm. Font notices are in [the font directory](ui/fonts).
 
-The clean-source import and normal title launch passed. The headless suite passed 44 checks at each of 30, 60 and 120 render FPS. In Chromium at 720p and 1080p, scripted browser input exercised the two practice materials, dodged the club in each direction, rolled across the Gatekeeper, counterattacked and went through the cleared gate. The 1080p run used the in-game settings to disable shake, particles and health numbers.
+The clean-source import and normal title launch passed. The headless suite passed 50 checks at each of 30, 60 and 120 render FPS. In Chromium at 720p and 1080p, scripted browser input exercised the two practice materials, dodged the club in each direction, rolled across the Gatekeeper, counterattacked and went through the cleared gate. The 1080p run used the in-game settings to disable shake, particles and health numbers.
 
 The release workflow publishes the browser version. Physical controller validation remains pending.
 

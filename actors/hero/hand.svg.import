@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d4jyja7w03bk0"
-path="res://.godot/imported/cape.svg-417e84e3fcfb28bc91cf4809f292d9f8.ctex"
+uid="uid://qe7gftrndtrj"
+path="res://.godot/imported/hand.svg-5e36e3318334640b3ba67c0089740007.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://content/enemies/gatekeeper/cape.svg"
-dest_files=["res://.godot/imported/cape.svg-417e84e3fcfb28bc91cf4809f292d9f8.ctex"]
+source_file="res://actors/hero/hand.svg"
+dest_files=["res://.godot/imported/hand.svg-5e36e3318334640b3ba67c0089740007.ctex"]
 
 [params]
 

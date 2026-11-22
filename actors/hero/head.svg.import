@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b12qe3o1apg65"
-path="res://.godot/imported/gauntlet.svg-cab4797aae2b3dbc38d9a4055685bcc2.ctex"
+uid="uid://bom4u7mbvjwt5"
+path="res://.godot/imported/head.svg-56afb231bf4ad0e1cf5fc028375b3daf.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://actors/hero/gauntlet.svg"
-dest_files=["res://.godot/imported/gauntlet.svg-cab4797aae2b3dbc38d9a4055685bcc2.ctex"]
+source_file="res://actors/hero/head.svg"
+dest_files=["res://.godot/imported/head.svg-56afb231bf4ad0e1cf5fc028375b3daf.ctex"]
 
 [params]
 
