@@ -24,6 +24,7 @@ func _run() -> void:
 	root.add_child(_input_source)
 	_input_source.enabled = true
 	_catalog_and_rigs()
+	_far_arm_layers_and_pose()
 	await _idle_and_tap()
 	await _targets_and_combo()
 	await _blade_reach(1)
@@ -74,6 +75,42 @@ func _catalog_and_rigs() -> void:
 		var outfit_ok := rig.equip_wearable(&"HeadGear", HELMET) and slot.get_child_count() == 1
 		_check(outfit_ok and rig.equip_wearable(&"HeadGear", null) and slot.get_child_count() == 0,
 			"%s removable helmet follows the head" % actor.name, true, outfit_ok)
+		actor.free()
+
+
+func _far_arm_layers_and_pose() -> void:
+	for scene: PackedScene in [ContentCatalog.WARDEN, GUARD]:
+		var actor := scene.instantiate() as Combatant
+		root.add_child(actor)
+		var rig := actor.rig
+		var offhand := rig.get_node(^"%OffHandGear") as Marker2D
+		var wrist := offhand.get_parent() as Bone2D
+		var elbow := wrist.get_parent() as Bone2D
+		var shoulder := elbow.get_parent() as Bone2D
+		var chest := shoulder.get_parent() as Bone2D
+		var near := chest.get_node(^"NearShoulder")
+		var torso := chest.get_node(^"Art")
+		var layers_ok := shoulder.show_behind_parent and shoulder.get_index() < torso.get_index()
+		layers_ok = layers_ok and torso.get_index() < near.get_index()
+		var joints_ok := is_equal_approx(shoulder.length, elbow.position.length())
+		joints_ok = joints_ok and is_equal_approx(elbow.length, wrist.position.length())
+		_check(layers_ok and joints_ok, "%s offhand hierarchy and layer order" % actor.name,
+			[true, true], [layers_ok, joints_ok])
+		for facing: int in [1, -1]:
+			rig.sample(&"idle", 1, facing, 0.0, 0.0)
+			for tick: int in 5:
+				rig.sample(&"idle", 1, facing, 0.0, CombatSpace.STEP)
+			var offset := wrist.global_position - chest.global_position
+			_check(offset.x * facing > 36.0 and absf(offset.y) < 15.0,
+				"%s far fist is outside the chest at guard height facing %d" % [actor.name, facing],
+				"forward x > 36, vertical offset < 15", offset)
+			var lowest := 0.0
+			rig.sample(&"stride", 2, facing, 0.0, 0.0)
+			for tick: int in 32:
+				rig.sample(&"stride", 2, facing, 0.0, CombatSpace.STEP)
+				lowest = maxf(lowest, wrist.global_position.y - chest.global_position.y)
+			_check(lowest < 39.0, "%s far arm stays clear of the hip through the stride facing %d" % [actor.name, facing],
+				"maximum wrist drop < 39", lowest)
 		actor.free()
 
 

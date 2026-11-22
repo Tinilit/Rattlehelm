@@ -67,7 +67,7 @@ Stage A covers the practice targets, the single Gatekeeper encounter and the swo
 
 The authored motion, art and audio were created for Rattlehelm. Font notices are in [the font directory](ui/fonts).
 
-The clean-source import and normal title launch passed. The headless suite passed 50 checks at each of 30, 60 and 120 render FPS. In Chromium at 720p and 1080p, scripted browser input exercised the two practice materials, dodged the club in each direction, rolled across the Gatekeeper, counterattacked and went through the cleared gate. The 1080p run used the in-game settings to disable shake, particles and health numbers.
+The clean-source import and normal title launch passed. The headless suite passed 60 checks at each of 30, 60 and 120 render FPS. In Chromium at 720p and 1080p, scripted browser input exercised the two practice materials, dodged the club in each direction, rolled across the Gatekeeper, counterattacked and went through the cleared gate. The 1080p run used the in-game settings to disable shake, particles and health numbers.
 
 The release workflow publishes the browser version. Physical controller validation remains pending.
 

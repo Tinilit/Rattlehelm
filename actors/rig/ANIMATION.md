@@ -12,13 +12,13 @@ The guide pages on the documentation site returned an access error in the build 
 
 ## Character layers
 
-The base watchman has bare feet, exposed skin, trousers and a rusted sword. The waist, upper and lower legs, foot, head, torso, upper arm, forearm and hand have separate painted pivots. Far limbs render behind the torso. The longer torso and smaller head leave negative space around the elbow and between the legs through the stride. The Gatekeeper wears a helmet scene mounted on its head bone.
+The base watchman has bare feet, exposed skin, trousers and a rusted sword. The waist, upper and lower legs, foot, head, torso, upper arm, forearm and hand have separate painted pivots. Both rigs put the far shoulder and thigh behind their parents. On the chest, torso art and armor sit between the far and near arm branches. The far shoulder sits high under the outer chest contour, and the elbow raises the far hand to chest height during the guard. Its stride keys follow the opposing leg and avoid carrying the hand into the hip silhouette. The longer torso and smaller head leave negative space around the elbow and between the legs through the stride. The Gatekeeper wears a helmet scene mounted on its head bone.
 
 To add gear, use a scene rooted in Node2D with the joint at its origin. Attach it with `FighterRig.equip_wearable()` or instance it under a named gear anchor in either rig. Use `HeadGear`, `TorsoGear` and `BackGear` for core items and the matching `Near` and `Far` limb anchors for armor. `OffHandGear` is available for a shield or offhand item. The held weapon uses its own socket. A sword scene marks its damaging edge with `BladeRoot` and `Tip`.
 
 ## Clips and acceptance checks
 
-These clips share the same skeleton layout in `WardenRig.tscn` and `GatekeeperRig.tscn`. The run tests resolve every clip track against both rigs and check the wrist socket. The browser playthrough exercises the common room and combat path.
+These clips share the same skeleton layout in `WardenRig.tscn` and `GatekeeperRig.tscn`. The run tests resolve every clip track against both rigs and check the wrist socket, arm lengths, torso draw order and far hand in both facing directions. The browser playthrough exercises the common room and combat path.
 
 | ID | Family and reference | Authored motion | Acceptance check |
 | --- | --- | --- | --- |
