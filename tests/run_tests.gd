@@ -86,11 +86,13 @@ func _far_arm_layers_and_pose() -> void:
 		if scene == ContentCatalog.WARDEN:
 			rig.equip(SWORD)
 			_watchman_leg_layers(rig)
+			_watchman_grip(rig)
 		var offhand := rig.get_node(^"%OffHandGear") as Marker2D
 		var wrist := offhand.get_parent() as Bone2D
 		var elbow := wrist.get_parent() as Bone2D
 		var shoulder := elbow.get_parent() as Bone2D
 		var chest := shoulder.get_parent() as Bone2D
+		var chest_center := rig.get_node(^"%TorsoGear") as Marker2D
 		var near := chest.get_node(^"NearShoulder")
 		var torso := chest.get_node(^"Art")
 		var layers_ok := shoulder.show_behind_parent and shoulder.get_index() < torso.get_index()
@@ -99,53 +101,112 @@ func _far_arm_layers_and_pose() -> void:
 		joints_ok = joints_ok and is_equal_approx(elbow.length, wrist.position.length())
 		_check(layers_ok and joints_ok, "%s offhand hierarchy and layer order" % actor.name,
 			[true, true], [layers_ok, joints_ok])
+		if scene == ContentCatalog.WARDEN:
+			var palm_art := wrist.get_node(^"Art") as Sprite2D
+			var cuff := elbow.get_node(^"Art") as Sprite2D
+			var palm_in_front := not wrist.show_behind_parent and cuff.get_index() < wrist.get_index()
+			var joined := palm_in_front and _painted_joint_overlaps(wrist.global_position, palm_art, cuff)
+			_check(joined, "Watchman palm overlaps the front of the wrist wrap", true, joined)
+			var waist := rig.get_node(^"%WaistLayer") as Node2D
+			var waist_art := waist.get_node(^"Art") as Sprite2D
+			var hip := rig.get_node(^"Facing/Skeleton/Hip") as Bone2D
+			var behind_torso := waist.get_index() + 1 == torso.get_index()
+			var waist_fitted := _painted_joint_overlaps(hip.global_position, waist_art, torso as Sprite2D)
+			_check(behind_torso and waist_fitted,
+				"Watchman waist meets the torso one layer below it", [true, true], [behind_torso, waist_fitted])
+			var foreground := torso.get_index() < near.get_index() and chest.get_node(^"Neck").get_index() < near.get_index()
+			_check(foreground, "Watchman near arm is in front of the torso and head", true, foreground)
 		for facing: int in [1, -1]:
 			rig.sample(&"idle", 1, facing, 0.0, 0.0)
 			for tick: int in 5:
 				rig.sample(&"idle", 1, facing, 0.0, CombatSpace.STEP)
-			var offset := wrist.global_position - chest.global_position
+			var offset := wrist.global_position - chest_center.global_position
 			_check(offset.x * facing > 28.0 and offset.y > 18.0 and offset.y < 39.0,
 				"%s far fist rests outside the lower chest facing %d" % [actor.name, facing],
 				"forward x > 28, vertical offset between 18 and 39", offset)
 			var edge := rig.weapon_edge()
 			if edge.size() == 2:
-				var closest := Geometry2D.get_closest_point_to_segment(wrist.global_position, edge[0], edge[1])
-				var clearance := wrist.global_position.y - closest.y
+				var palm := offhand.global_position
+				var closest := Geometry2D.get_closest_point_to_segment(palm, edge[0], edge[1])
+				var clearance := palm.y - closest.y
 				_check(clearance > 4.0, "Watchman free hand clears the blade facing %d" % facing,
 					"more than 4 px below the blade", clearance)
 			var lowest := 0.0
 			rig.sample(&"stride", 2, facing, 0.0, 0.0)
 			for tick: int in 32:
 				rig.sample(&"stride", 2, facing, 0.0, CombatSpace.STEP)
-				lowest = maxf(lowest, wrist.global_position.y - chest.global_position.y)
+				lowest = maxf(lowest, wrist.global_position.y - chest_center.global_position.y)
 			_check(lowest < 39.0, "%s far arm stays clear of the hip through the stride facing %d" % [actor.name, facing],
 				"maximum wrist drop < 39", lowest)
+		if scene == ContentCatalog.WARDEN:
+			_watchman_pelvis_pivot(rig, chest)
 		actor.free()
 
 
+func _watchman_pelvis_pivot(rig: FighterRig, chest: Bone2D) -> void:
+	var hip := rig.get_node(^"Facing/Skeleton/Hip") as Bone2D
+	var waist := rig.get_node(^"%WaistLayer") as Node2D
+	var torso := chest.get_node(^"Art") as Sprite2D
+	var waist_art := waist.get_node(^"Art") as Sprite2D
+	var animations := rig.get_node(^"AnimationPlayer") as AnimationPlayer
+	var label := "Watchman torso stays on the pelvic pivot through swings and rolls"
+	for facing: int in [1, -1]:
+		for clip: StringName in [&"slash_3", &"roll"]:
+			rig.sample(clip, 1, facing, 0.0, 0.0)
+			var ticks := roundi(animations.get_animation(clip).length / CombatSpace.STEP)
+			for tick: int in ticks:
+				var pivot := hip.global_position
+				var seated := chest.global_position.distance_to(pivot) < 0.001
+				seated = seated and waist.global_position.distance_to(pivot) < 0.001
+				seated = seated and _painted_joint_overlaps(pivot, waist_art, torso)
+				if not seated:
+					_check(false, label, "painted joint at the hip", "%s facing %d at tick %d" % [clip, facing, tick])
+					return
+				rig.sample(clip, 1, facing, 0.0, CombatSpace.STEP)
+	_check(true, label, true, true)
+
+
+func _watchman_grip(rig: FighterRig) -> void:
+	var socket := rig.get_node(FighterRig.SOCKET_PATH) as Marker2D
+	var fist := socket.get_node(^"../Art") as Sprite2D
+	var sword := socket.get_child(0) as Node2D
+	var grip := sword.get_node(^"Grip") as Marker2D
+	var blade_art := sword.get_node(^"Artwork") as Sprite2D
+	var palm := socket.global_position
+	var attached := not socket.position.is_zero_approx() and grip.global_position.is_equal_approx(palm)
+	var covered := socket.get_index() < fist.get_index() and fist.is_pixel_opaque(fist.to_local(palm))
+	covered = covered and blade_art.is_pixel_opaque(blade_art.to_local(palm))
+	_check(attached and covered, "Watchman fist covers the fitted sword handle at the palm", true, attached and covered)
+
+
 func _watchman_leg_layers(rig: FighterRig) -> void:
-	var slots := ["NearShinGear", "NearFootGear", "FarShinGear", "FarFootGear"]
+	var slots := ["NearLegGear", "NearShinGear", "NearFootGear", "FarLegGear", "FarShinGear", "FarFootGear"]
+	var hip := rig.get_node(^"Facing/Skeleton/Hip") as Bone2D
+	var spine := hip.get_node(^"Spine")
+	var waist := rig.get_node(^"%WaistLayer/Art") as Sprite2D
 	var joints: Array[Bone2D] = []
 	var layers_ok := true
 	for slot: String in slots:
 		var joint := rig.get_node(NodePath("%" + slot)).get_parent() as Bone2D
 		joints.append(joint)
-		layers_ok = layers_ok and joint.show_behind_parent
-	_check(layers_ok, "Watchman shins and feet tuck behind the painted cuffs", true, layers_ok)
+		var thigh_under_waist := joint.get_parent() == hip and joint.get_index() < spine.get_index()
+		layers_ok = layers_ok and (thigh_under_waist or joint.show_behind_parent)
+	_check(layers_ok, "Watchman thighs, shins and feet tuck behind their painted seams", true, layers_ok)
 
 	var first_gap := ""
 	rig.sample(&"stride", 1, 1, 0.0, 0.0)
 	for tick: int in 32:
 		for joint: Bone2D in joints:
 			var lower := joint.get_node(^"Art") as Sprite2D
-			var upper := joint.get_parent().get_node(^"Art") as Sprite2D
+			var parent := joint.get_parent()
+			var upper := waist if parent == hip else parent.get_node(^"Art") as Sprite2D
 			if not _painted_joint_overlaps(joint.global_position, lower, upper):
 				first_gap = "%s at tick %d" % [joint.name, tick]
 				break
 		if not first_gap.is_empty():
 			break
 		rig.sample(&"stride", 1, 1, 0.0, CombatSpace.STEP)
-	_check(first_gap.is_empty(), "Watchman trousers and feet connect across the stride", "", first_gap)
+	_check(first_gap.is_empty(), "Watchman hip, knee and ankle seams overlap across the stride", "", first_gap)
 
 
 func _painted_joint_overlaps(center: Vector2, lower: Sprite2D, upper: Sprite2D) -> bool:

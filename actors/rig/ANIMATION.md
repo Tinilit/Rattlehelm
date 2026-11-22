@@ -14,13 +14,19 @@ The guide pages on the documentation site returned an access error in the build 
 
 The base watchman has bare feet, exposed skin, trousers and a rusted sword. Each fighter has an original painted atlas. Each body part uses a separate `AtlasTexture` region, with its painted joint centered on the corresponding bone. The sword and club use separate regions from the same atlases.
 
-The far arm and thigh draw behind the torso and hip. On the watchman, the shins tuck behind the thighs at the knees, the bare feet sit behind the trouser cuffs and the sash covers the lower edge of the torso. The head draws over the shoulder during the windup. The free arm uses a shorter far-side silhouette and its own fist sprite. The idle keys keep that hand below the sword and the stride swings it against the opposite leg. The gripping hand draws over the sword handle. These layers use scene tree order so the entire fighter sorts with the other actors at floor depth. The Gatekeeper wears a helmet scene mounted on its head bone.
+On the watchman, `Spine` and `Chest` share the `Hip` origin. Their rotation tracks tilt the torso about the pelvic joint. The lower torso artwork sits on this joint, with the shoulders and neck positioned above it. The waist follows the hip transform in the draw slot immediately behind the torso. [Godot cutout hierarchy and pivots](https://docs.godotengine.org/en/stable/tutorials/animation/cutout_animation.html) · [2D skeleton setup](https://docs.godotengine.org/en/stable/tutorials/animation/2d_skeletons.html)
+
+The far arm and thigh draw behind the torso and hip. The watchman's shins tuck behind the thighs at the knees and the bare feet sit behind the trouser cuffs. The near arm and sword draw in front of the torso and head, with the gripping fingers over the handle. The free arm uses a shorter far-side silhouette and a palm-facing sprite that overlaps the end of the wrist wrap. The idle keys keep that hand below the sword and the stride swings it against the opposite leg. These layers use scene tree order so the entire fighter sorts with the other actors at floor depth. The Gatekeeper wears a helmet scene mounted on its head bone.
+
+The watchman's `NearThigh` and `FarThigh` pivot at separate sockets inside the painted pelvis. Each thigh carries its shin and foot. The waist artwork covers both upper seams and tapers into the thighs below the sash. The far thigh is drawn slightly narrower for the three-quarter view. [Godot leg chain](https://docs.godotengine.org/en/stable/tutorials/animation/cutout_animation.html#ik-chains)
 
 To add gear, use a scene rooted in Node2D with the joint at its origin. Attach it with `FighterRig.equip_wearable()` or instance it under a named gear anchor in either rig. Use `HeadGear`, `TorsoGear` and `BackGear` for core items and the matching `Near` and `Far` limb anchors for armor. `OffHandGear` is available for a shield or offhand item. The held weapon uses its own socket. A sword scene marks its damaging edge with `BladeRoot` and `Tip`.
 
+On the watchman, the hand bones pivot at the wrist. Fit the painted wrist to the end of the forearm, then align `WeaponSocket` with the center of the closed fingers. The weapon's `Grip` marker sits on its handle. The near shoulder material feathers the upper edge of the arm into the painted deltoid. Its fade starts at the shoulder region's top row in the atlas.
+
 ## Clips and acceptance checks
 
-These clips share the same skeleton layout in `WardenRig.tscn` and `GatekeeperRig.tscn`. The run tests resolve clip tracks against both rigs, check the arm hierarchy and sample hand clearance in both facing directions. They also check that the watchman's painted leg joints overlap through a full stride. The browser playthrough exercises the common room and combat path.
+These clips share track paths in `WardenRig.tscn` and `GatekeeperRig.tscn`. The run tests resolve clip tracks against both rigs, check the arm hierarchy and sample hand clearance in both facing directions. They also check the watchman's painted leg joints through the stride and the shared pelvic pivot through the sweep and roll. The browser playthrough exercises the common room and combat path.
 
 | ID | Family and reference | Authored motion | Acceptance check |
 | --- | --- | --- | --- |

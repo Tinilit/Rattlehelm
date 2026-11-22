@@ -4,9 +4,11 @@ extends Node2D
 const SOCKET_PATH := ^"Facing/Skeleton/Hip/Spine/Chest/NearShoulder/NearElbow/NearHand/WeaponSocket"
 
 @onready var _facing_node: Node2D = $Facing
+@onready var _hip: Bone2D = $Facing/Skeleton/Hip
 @onready var _mixer: AnimationTree = $AnimationTree
 @onready var _playback: AnimationNodeStateMachinePlayback = _mixer.get("parameters/playback")
 @onready var _socket: Marker2D = get_node(SOCKET_PATH)
+@onready var _waist_layer := get_node_or_null(^"%WaistLayer") as Node2D
 
 @onready var _bottle: Sprite2D = get_node_or_null(
 	^"Facing/Skeleton/Hip/Spine/Chest/FarShoulder/FarElbow/FarHand/Bottle"
@@ -73,6 +75,9 @@ func sample(clip: StringName, revision: int, facing: int, height: float, delta: 
 		_clip = clip
 		_revision = revision
 	_mixer.advance(delta)
+	if _waist_layer != null:
+		# The waist shares the torso's pivot and keeps the hip orientation in its draw slot.
+		_waist_layer.global_transform = _hip.global_transform
 	if _bottle != null:
 		var time := _playback.get_current_play_position()
 		_bottle.visible = clip == &"flask" and time >= 4.0 * CombatSpace.STEP and time < 24.0 * CombatSpace.STEP
