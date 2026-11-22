@@ -14,6 +14,7 @@ url.searchParams.set('build', build);
 const width = Number(process.env.PLAYTEST_WIDTH || 1280);
 const height = Math.round(width * 9 / 16);
 const record = process.env.RECORD_PLAYTEST === '1';
+const quick = !record && process.env.RATTLEHELM_QUICK_SMOKE === '1';
 const reducedEffects = process.env.REDUCED_EFFECTS === '1';
 const messages = [];
 const critical = [];
@@ -159,7 +160,7 @@ async function startRecording() {
   });
 }
 
-try {
+async function runSmoke() {
   const response = await page.goto(url.href, { waitUntil: 'domcontentloaded', timeout: 60_000 });
   assert.ok(response.ok(), `Could not load ${url}`);
   await waitFor('screen', 'eq', 'title', 60_000);
@@ -222,6 +223,11 @@ try {
   await waitFor('exitReady', 'eq', true);
   await page.keyboard.press('e');
   await waitFor('room', 'eq', 'watch_gate');
+  if (quick) {
+    assert.deepEqual(critical, []);
+    console.log(`PASS ${build}: Chromium WebGL 2, WebAudio, keyboard combat and room transition`);
+    return;
+  }
   await page.evaluate(() => {
     const times = [];
     let previous;
@@ -304,6 +310,10 @@ try {
   console.log(`Watch Gate ${width}×${height}, Chromium WebGL 2: ${frames.length} rAF intervals, median ${median.toFixed(1)} ms, max ${max.toFixed(1)} ms`);
   assert.deepEqual(critical, []);
   console.log(`PASS ${build}: Chromium WebGL 2, WebAudio, hit t${hit.impactTick}, depth misses ${miss.missDepth.toFixed(1)}/${secondMiss.missDepth.toFixed(1)}, rolls and counters in both directions, pause, victory`);
+}
+
+try {
+  await runSmoke();
 } catch (error) {
   await page.screenshot({ path: join(output, 'failure.png'), timeout: 4_000 }).catch(() => {});
   throw error;

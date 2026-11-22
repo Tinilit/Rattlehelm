@@ -59,7 +59,7 @@ ci/node_modules/.bin/playwright install chromium
 node ci/browser_smoke.mjs http://127.0.0.1:8765/Rattlehelm/ local
 ```
 
-[The playtest workflow](.github/workflows/playtest.yml) runs the import, headless checks and Chromium playthrough on pull requests, pushes to `main` and manual dispatches. The build stamp in Pause comes from the workflow commit. To enable the live site after confirming private-repository Pages support, set **Settings → Pages → Source → GitHub Actions** and the repository variable `ENABLE_GITHUB_PAGES` to `true`. The job serializes deployments, checks the tip of `main` and exercises the returned HTTPS URL. A live URL and workflow run become available after the first confirmed deployment.
+[The playtest workflow](.github/workflows/playtest.yml) runs the import, headless checks and Chromium smoke test on pull requests, pushes to `main` and manual dispatches. The build stamp in Pause comes from the workflow commit. Enable the live site in **Settings → Pages → Source → GitHub Actions**. The job serializes deployments, checks the tip of `main` and exercises the returned HTTPS URL. A live URL and workflow run become available after the first confirmed deployment.
 
 ## Playtest status
 
